@@ -2,7 +2,6 @@ const template = document.createElement('template')
 
 template.innerHTML = `
 <style>
-
 :host {
     display: block;
     padding: 20px 0;
@@ -44,10 +43,9 @@ ul {
     background-color: var(--gray);
 }
 
-::slotted([slot="tab-option"].active){
+::slotted([slot="tab-option"][data-active]){
     background-color: var(--gray-light);
 }
-
 </style>
 
 <header>
@@ -73,15 +71,20 @@ class PageHeader extends HTMLElement {
         const target = event.target
 
         if (target.getAttribute('slot') !== 'tab-option' ||
-            target.classList.contains('active')) {
+            target.hasAttribute('data-active')) {
             return
         }
 
         this.shadowRoot.host.querySelectorAll('[slot="tab-option"]')
-            .forEach(el => el.classList.remove('active'))
+            .forEach(el => delete el.dataset.active)
 
-        target.classList.add('active')
-        dispatchEvent(new CustomEvent('tab-changed', {detail: {newTab: target.innerText}}))
+        target.setAttribute('data-active', '')
+
+        this.dispatchEvent(new CustomEvent('active-tab-changed', {
+            bubbles: false,
+            cancelable: true,
+            detail: {tabName: target.innerText}
+        }))
     }
 }
 
