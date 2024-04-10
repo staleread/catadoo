@@ -10,24 +10,32 @@ template.innerHTML = `
 header {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+    gap: 30px;
     justify-content: space-between;
+    align-items: center;
 }
 
 ::slotted([slot="title"]) {
+    display: block;
     font-weight: 400;
     font-size: 40px;
+    text-align: left;
 }
 
 ul {
     display: flex;
     flex-direction: row;
-    justify-content: right;
+    justify-content: end;
     gap: 10px;
     margin: 0;
+    padding: 0;
     list-style: none;
 }
 
 ::slotted([slot="tab-option"]) {
+    width: 150px;
+    text-align: center;
     font-size: 20px;
     border-radius: 7px;
     padding: 10px 30px;
@@ -45,6 +53,16 @@ ul {
 
 ::slotted([slot="tab-option"][data-active]){
     background-color: var(--gray-light);
+}
+
+@media (width <= 700px) {
+    :host {
+        padding: 30px 0;
+    }
+    
+    header {
+        flex-direction: column;
+    }
 }
 </style>
 
