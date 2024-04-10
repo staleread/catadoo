@@ -8,7 +8,7 @@ class PageHeader extends HTMLElement {
     
     :host {
         display: block;
-        padding: 20px 0;
+        padding: 30px 0;
     }
     
     header {
@@ -57,10 +57,6 @@ class PageHeader extends HTMLElement {
     }
     
     @media (width <= 700px) {
-        :host {
-            padding: 30px 0;
-        }
-    
         header {
             flex-direction: column;
         }
