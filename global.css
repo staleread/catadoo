@@ -14,14 +14,51 @@
 /* ------- Reset default ------- */
 * {
     box-sizing: border-box;
-    font-family: "Inter", sans-serif;
+    font-family: var(--main-font);
+    color: var(--text-color);
     margin: 0;
 }
 
 body {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 20px;
     background-color: var(--gray-super-dark);
+}
+
+@media screen and (max-width: 500px) {
+    body {
+        width: 100%;
+        padding: 0 10px;
+    }
 }
 
 a {
     text-decoration: none;
+}
+
+/* ------ Common styles ------- */
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ------ Globally used elements ------- */
+
+.page-title {
+    text-align: center;
+    padding: 20px 0;
+    font-weight: 400;
+    font-size: 40px;
+}
+
+@media screen and (max-width: 500px) {
+    .page-title {
+        font-size: 32px;
+    }
 }

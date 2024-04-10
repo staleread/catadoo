@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <title>Lab 5</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,17 +13,16 @@
 <body>
 
 <header>
-    <h1>Chapter 6</h1>
+    <h1 class="page-title">Chapter 6</h1>
 </header>
 
 <main>
-    <nav>
-        <ul>
-            <li><a href="#">Shop</a></li>
-            <li><a href="#">Todo List</a></li>
-        </ul>
-    </nav>
+    <nav-links>
+        <a slot="nav-link" href="#">Shop</a>
+        <a slot="nav-link" href="#">Todo List</a>
+    </nav-links>
 </main>
 
+<script src="/js/components/NavLinks.js"></script>
 </body>
 </html>
