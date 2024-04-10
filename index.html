@@ -12,17 +12,16 @@
 </head>
 <body>
 
-<header>
-    <h1 class="page-title">Chapter 6</h1>
-</header>
+<page-header>
+    <h1 slot="title">Chapter 6</h1>
+    <li slot="tab-option" class="active">Shop</li>
+    <li slot="tab-option">Todo List</li>
+</page-header>
 
 <main>
-    <nav-links>
-        <a slot="nav-link" href="#">Shop</a>
-        <a slot="nav-link" href="#">Todo List</a>
-    </nav-links>
+
 </main>
 
-<script src="/js/components/NavLinks.js"></script>
+<script src="/js/components/PageHeader.js"></script>
 </body>
 </html>
