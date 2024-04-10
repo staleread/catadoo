@@ -23,17 +23,14 @@ header {
     text-align: left;
 }
 
-ul {
+nav {
     display: flex;
     flex-direction: row;
     justify-content: end;
     gap: 10px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
 }
 
-::slotted([slot="tab-option"]) {
+::slotted([slot="nav-link"]) {
     width: 150px;
     text-align: center;
     font-size: 20px;
@@ -47,11 +44,11 @@ ul {
     cursor: pointer;
 }
 
-::slotted([slot="tab-option"]:hover){
+::slotted([slot="nav-link"]:hover){
     background-color: var(--gray);
 }
 
-::slotted([slot="tab-option"][data-active]){
+::slotted([slot="nav-link"][data-active]){
     background-color: var(--gray-light);
 }
 
@@ -70,9 +67,7 @@ ul {
     <slot name="title"></slot>
     
     <nav>
-        <ul>
-            <slot name="tab-option"></slot>
-        </ul>
+        <slot name="nav-link"></slot>
     </nav>
 </header>`
 
@@ -81,27 +76,30 @@ class PageHeader extends HTMLElement {
         const shadow = this.attachShadow({ mode: 'open' })
         shadow.appendChild(template.content.cloneNode(true))
 
-        shadow.querySelector('ul').addEventListener('click',
+        shadow.querySelector('nav').addEventListener('click',
             (event) => this.updateActiveNavOption(event))
     }
 
     updateActiveNavOption(event) {
         const target = event.target
 
-        if (target.getAttribute('slot') !== 'tab-option' ||
-            target.hasAttribute('data-active')) {
+        if (target.getAttribute('slot') !== 'nav-link') {
             return
+        }else if (target.hasAttribute('data-active')) {
+            event.preventDefault()
+            return;
         }
 
-        this.shadowRoot.host.querySelectorAll('[slot="tab-option"]')
+        event.preventDefault()
+        this.shadowRoot.host.querySelectorAll('[slot="nav-link"]')
             .forEach(el => delete el.dataset.active)
 
         target.setAttribute('data-active', '')
 
-        this.dispatchEvent(new CustomEvent('active-tab-changed', {
+        this.dispatchEvent(new CustomEvent('route-changed', {
             bubbles: false,
             cancelable: true,
-            detail: {tabName: target.innerText}
+            detail: {route: target.href}
         }))
     }
 }
