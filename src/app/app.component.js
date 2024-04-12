@@ -1,5 +1,6 @@
 import {HeaderComponent} from "./layout/header.component.js";
 import {ProductComponent} from "./product/product.component.js";
+import {TodoComponent} from "./todo/todo.component.js";
 
 const template = document.createElement('template');
 
@@ -20,7 +21,9 @@ template.innerHTML = `
 export class AppComponent extends HTMLElement {
     static selector = 'app-root';
 
-    contentComponentSelector;
+    defaults = {
+        route: '/products'
+    }
 
     constructor() {
         super();
@@ -32,13 +35,29 @@ export class AppComponent extends HTMLElement {
         this.rendered = true;
 
         this.shadowRoot.appendChild(template.content.cloneNode(true));
-        this.updateRoute()
+        this.updatePageContent(this.defaults.route)
+
+        this.shadowRoot
+            .querySelector(HeaderComponent.selector)
+            .addEventListener('route-changed', (e) => this.updatePageContent(e.detail.route))
     }
 
-    updateRoute() {
-        this.contentComponentSelector = ProductComponent.selector;
+    updatePageContent(route) {
+        let contentComponentSelector;
 
-        const contentElem = document.createElement(this.contentComponentSelector);
+        switch (route) {
+            case '/':
+            case '/products':
+                contentComponentSelector = ProductComponent.selector;
+                break;
+            case '/todos':
+                contentComponentSelector = TodoComponent.selector;
+                break;
+        }
+
+        this.shadowRoot.host.innerHTML = ''
+
+        const contentElem = document.createElement(contentComponentSelector);
         contentElem.setAttribute('slot', 'content')
 
         this.shadowRoot.host.appendChild(contentElem)

@@ -71,8 +71,8 @@ nav {
 <header>
     <h1 class="title">Chapter 6</h1>
     <nav>
-        <a class="nav-link" href="/shop" data-active>Shop</a>
-        <a class="nav-link" href="/todo">Todo List</a>
+        <a class="nav-link" href="/products" data-route="/products" data-active>Shop</a>
+        <a class="nav-link" href="/todos" data-route="/todos">Todo List</a>
     </nav>
 </header>`;
 
@@ -115,7 +115,7 @@ export class HeaderComponent extends HTMLElement {
             .forEach(el => delete el.dataset.active);
 
         target.setAttribute('data-active', '');
-        this.currentRoute = target.href;
+        this.currentRoute = target.dataset.route;
 
         this.dispatchEvent(new CustomEvent('route-changed', {
             bubbles: false,
