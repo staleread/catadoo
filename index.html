@@ -20,10 +20,11 @@
 
 <main>
     <section class="shop">
-        <product-menu>
+        <product-menu id="js-product-menu">
             <h2 slot="title">Offline Shop</h2>
         </product-menu>
 
+        <product-list id="js-product-list"></product-list>
     </section>
 
     <section class="todo-list">
@@ -31,9 +32,17 @@
     </section>
 </main>
 
-<script defer src="/components/PageHeader.js"></script>
-<script defer src="/components/ProductMenu.js"></script>
+<custom-modal>
+    <h2 slot="title">Title</h2>
+    <p>Hello!</p>
+</custom-modal>
 
-<script defer type="module" src="/main.js"></script>
+<script defer src="/components/PageHeader.js"></script>
+<script defer src="/components/Modal.js"></script>
+<script defer src="/components/ProductMenu.js"></script>
+<script defer src="/components/ProductList.js"></script>
+<script defer src="/components/ProductCard.js"></script>
+
+<script type="module" src="main.js"></script>
 </body>
 </html>

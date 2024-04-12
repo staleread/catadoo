@@ -1,102 +1,103 @@
-class ProductMenu extends HTMLElement {
-    template = () => `
-    <style>
-    * {
-        box-sizing: border-box;
-        margin: 0;
-    }
-    
-    :host {
-        display: block;
-        padding: 20px 0;
-    }
-    
-    .menu {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        gap: 20px;
-        align-items: center;
-    }
-    
-    .actions {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        gap: 14px;
-    }
-    
-    ::slotted([slot="title"]) {
-        font-size: 26px;
-        font-weight: 400;
-    }
-    
-    input[type="text"] {
-        display:block;
-        outline: none;
-        border: solid 2px var(--gray-light);
-        background-color: transparent;
-        color: var(--gray-light);
-        padding: 10px;
-        border-radius: 10px;
-        font-size: 18px;
-    
-        &:focus {
-            color: var(--white);
-            border-color: var(--white);
-        }
-    }
-    
-    .add-product-btn {
-        display: block;
-        border: none;
-        border-radius: 10px;
-        padding: 10px 30px;
-        font-size: 17px;
-        background-color: var(--gray-light);
+const productMenuTemplate = document.createElement('template')
+
+productMenuTemplate.innerHTML = `
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+:host {
+    display: block;
+    padding: 20px 0;
+}
+
+.menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: center;
+}
+
+.actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+::slotted([slot="title"]) {
+    font-size: 26px;
+    font-weight: 400;
+}
+
+input[type="text"] {
+    display:block;
+    outline: none;
+    border: solid 2px var(--gray-light);
+    background-color: transparent;
+    color: var(--gray-light);
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 18px;
+
+    &:focus {
         color: var(--white);
-        cursor: pointer;
-        transition: all .3s;
+        border-color: var(--white);
     }
-    
-    .add-product-btn:hover {
-        background-color: var(--white);
-        color: var(--gray);
-    }
-    
-    @media screen and (width < 700px) {
-        .menu {
-            flex-direction: column;
-        }
-    }
-    
-    @media screen and (width < 450px) {
-        .actions {
-            flex-direction: column-reverse;
-            justify-content: start;
-            gap: 14px;
-            width: 90%;
-        }
-    }
-    </style>
-    
-    <section class="menu">
-        <slot name="title"></slot>
-        <div class="actions">
-            <input type="text" name="product-search" placeholder="Search">
-            <button class="add-product-btn">Add product</button>
-        </div>
-    </section>`
+}
 
-    render = () => this.shadowRoot.innerHTML = this.template().trim()
+.add-product-btn {
+    display: block;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 30px;
+    font-size: 17px;
+    background-color: var(--gray-light);
+    color: var(--white);
+    cursor: pointer;
+    transition: all .3s;
+}
 
+.add-product-btn:hover {
+    background-color: var(--white);
+    color: var(--gray);
+}
+
+@media screen and (width < 700px) {
+    .menu {
+        flex-direction: column;
+    }
+}
+
+@media screen and (width < 450px) {
+    .actions {
+        flex-direction: column-reverse;
+        justify-content: start;
+        gap: 14px;
+        width: 90%;
+    }
+}
+</style>
+
+<section class="menu">
+    <slot name="title"></slot>
+    <div class="actions">
+        <input type="text" name="product-search" placeholder="Search">
+        <button class="add-product-btn">Add product</button>
+    </div>
+</section>`
+
+class ProductMenu extends HTMLElement {
     constructor() {
         super()
+        this.attachShadow({mode: 'open'})
     }
 
-    connectedCallback() {
-        this.attachShadow({mode: 'open'})
+    render = () => this.shadowRoot.appendChild(productMenuTemplate.content.cloneNode(true))
 
+    connectedCallback() {
         if (this.rendered) {
             return
         }
@@ -120,4 +121,4 @@ class ProductMenu extends HTMLElement {
     }
 }
 
-customElements.define('product-menu', ProductMenu)
+customElements.define('product-menu', ProductMenu, {extends: null})
