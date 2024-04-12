@@ -24,17 +24,10 @@ export class ProductComponent extends HTMLElement {
         this.attachShadow({mode: 'open'});
     }
 
-    render() {
-        this.shadowRoot.innerHTML = '';
-        this.shadowRoot.appendChild(template.content.cloneNode(true));
-    }
-
     connectedCallback() {
-        if (this.rendered) {
-            return;
-        }
-
-        this.render();
+        if (this.rendered) return;
         this.rendered = true;
+
+        this.shadowRoot.appendChild(template.content.cloneNode(true));
     }
 }

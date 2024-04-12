@@ -27,24 +27,20 @@ export class AppComponent extends HTMLElement {
         this.attachShadow({mode: 'open'});
     }
 
-    render() {
-        this.shadowRoot.innerHTML = '';
+    connectedCallback() {
+        if (this.rendered) return;
+        this.rendered = true;
+
         this.shadowRoot.appendChild(template.content.cloneNode(true));
+        this.updateRoute()
+    }
+
+    updateRoute() {
+        this.contentComponentSelector = ProductComponent.selector;
 
         const contentElem = document.createElement(this.contentComponentSelector);
         contentElem.setAttribute('slot', 'content')
 
         this.shadowRoot.host.appendChild(contentElem)
-    }
-
-    connectedCallback() {
-        if (this.rendered) {
-            return;
-        }
-
-        this.contentComponentSelector = ProductComponent.selector;
-
-        this.render();
-        this.rendered = true;
     }
 }
