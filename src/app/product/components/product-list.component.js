@@ -9,9 +9,14 @@ template.innerHTML = `
     margin: 0;
 }
 
+.product-list-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 .js-empty-message,
 .js-loading-message {
-    display: block;
     padding: 15px 0;
 }
 
@@ -19,8 +24,6 @@ template.innerHTML = `
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 30%));
     gap: 14px;
-    padding: 0;
-    list-style-type: none;
 }
 
 @media screen and (width < 500px) {
@@ -55,11 +58,13 @@ template.innerHTML = `
 }
 </style>
 
-<section class="js-result-products"></section>
-    
-<footer class="js-total-price-wrapper" hidden>
-    <p class="js-total-price"></p>
-</footer>`;
+<div class="product-list-wrapper">
+    <section class="js-result-products"></section>
+        
+    <footer class="js-total-price-wrapper" hidden>
+        <p class="js-total-price"></p>
+    </footer>
+</div>`;
 
 export class ProductListComponent extends HTMLElement {
     static selector = 'app-product-list';
@@ -97,13 +102,12 @@ export class ProductListComponent extends HTMLElement {
     }
 
     renderProductList(products, totalPrice) {
-        this.elems.productList.innerHTML = '';
-
         if (products.length === 0) {
             this.elems.productList.innerHTML = `<div class="js-empty-message">Nothing found</div>`;
             this.elems.totalPriceWrapper.setAttribute('hidden', '');
         }
         else {
+            this.elems.productList.innerHTML = '';
             this.elems.totalPriceWrapper.removeAttribute('hidden');
             this.elems.totalPrice.innerText = `Total: $${totalPrice}`;
 

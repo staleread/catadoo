@@ -139,8 +139,8 @@ export class ProductComponent extends HTMLElement {
         this.elems.productList.setAttribute('is-loading', 'true');
 
         const productsInfo = await ProductComponent.productService.getProductsInfo(this.productsFilter);
-        this.elems.productList.renderProductList(productsInfo.products, productsInfo.totalPrice);
-
         this.elems.productList.setAttribute('is-loading', 'false');
+
+        this.elems.productList.renderProductList(productsInfo.products, productsInfo.totalPrice);
     }
 }
