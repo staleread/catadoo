@@ -12,13 +12,21 @@ template.innerHTML = `
 }
 
 footer {
-    height: 300px;
+    height: 200px;
     padding: 30px 0;
 }
 
 .copyright {
+    display: block;
     letter-spacing: 1px;
-    color: var(--gray-light)
+    color: var(--gray-light);
+    text-align: left;
+}
+
+@media screen and (width < 550px) {
+    .copyright {
+        text-align: center;
+    }
 }
 </style>
 
