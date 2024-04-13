@@ -1,5 +1,5 @@
-import {ProductCardComponent} from "./components/product-card.component.js";
 import {ProductService} from "./services/product.service.js";
+import {ProductListComponent} from "./components/product-list.component.js";
 
 const template = document.createElement('template');
 
@@ -10,16 +10,11 @@ template.innerHTML = `
     margin: 0;
 }
 
-.product-page {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-}
-
 header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    padding: 30px 0;
     gap: 20px;
     align-items: center;
 }
@@ -82,51 +77,6 @@ header {
         color: var(--gray);
     }
 }
-
-.js-total-price-wrapper {
-    border: solid var(--gray-light);
-    border-width: 1px 0 0;
-}
-
-.js-total-price {
-    display: block;
-    text-align: right;
-    color: var(--gray-light);
-    padding: 20px;
-    font-size: 18px;
-}
-
-@media screen and (width < 700px) {
-    .js-total-price {
-        text-align: center;
-    }
-}
-
-.js-empty-message,
-.js-loading-message {
-    display: block;
-    padding: 15px 0;
-}
-
-.js-result-products {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 30%));
-    gap: 14px;
-    padding: 0;
-    list-style-type: none;
-}
-
-@media screen and (width < 500px) {
-    .js-result-products {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
-}
-
-@media screen and (width < 600px) {
-    .js-result-products {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
-}
 </style>
 
 <section class="product-page">
@@ -138,11 +88,7 @@ header {
         </section>
     </header>
     
-    <section class="js-result-products"></section>
-    
-    <footer class="js-total-price-wrapper" hidden>
-        <p class="js-total-price"></p>
-    </footer>
+    <${ProductListComponent.selector}></${ProductListComponent.selector}>
 </section>`;
 
 export class ProductComponent extends HTMLElement {
@@ -150,22 +96,16 @@ export class ProductComponent extends HTMLElement {
     static productService = new ProductService()
 
     productsFilter = '';
-    products = [];
-    totalPrice = 0;
     refreshTimeout;
 
-    productListElem;
-    totalPriceWrapperElem;
-    totalPriceElem;
+    elems = {};
 
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-        this.productListElem = this.shadowRoot.querySelector('.js-result-products');
-        this.totalPriceWrapperElem = this.shadowRoot.querySelector('.js-total-price-wrapper');
-        this.totalPriceElem = this.shadowRoot.querySelector('.js-total-price');
+        this.elems.productList = this.shadowRoot.querySelector(ProductListComponent.selector);
 
         this.shadowRoot
             .querySelector('input[type="text"]')
@@ -182,60 +122,25 @@ export class ProductComponent extends HTMLElement {
     refreshProductList(filter = '') {
         let delay = 300;
 
+        // refresh immediately on startup
         if (!this.refreshTimeout) {
             delay = 0;
         }
 
         this.productsFilter = filter;
-
         clearTimeout(this.refreshTimeout);
+
         this.refreshTimeout = setTimeout(async () => {
             await this.fetchData();
-            this.renderProductList();
         }, delay);
     }
 
-    onLoading() {
-        this.productListElem.innerHTML = '<div class="js-loading-message">Loading...</div>';
-        this.totalPriceWrapperElem.setAttribute('hidden', '');
-    }
-
-    onLoadingComplete() {
-        this.productListElem.innerHTML = '';
-    }
-
     async fetchData() {
-        this.onLoading();
+        this.elems.productList.setAttribute('is-loading', 'true');
 
         const productsInfo = await ProductComponent.productService.getProductsInfo(this.productsFilter);
-        this.products = productsInfo.products;
-        this.totalPrice = productsInfo.totalPrice;
+        this.elems.productList.renderProductList(productsInfo.products, productsInfo.totalPrice);
 
-        this.onLoadingComplete();
-    }
-
-    renderProductList() {
-        this.productListElem.innerHTML = '';
-
-        if (this.products.length === 0) {
-            this.productListElem.innerHTML = `<div class="js-empty-message">Nothing found</div>`;
-            this.totalPriceWrapperElem.setAttribute('hidden', '');
-            return;
-        }
-
-        this.totalPriceWrapperElem.removeAttribute('hidden');
-        this.totalPriceElem.innerText = `Total: $${this.totalPrice}`;
-
-        customElements.whenDefined(ProductCardComponent.selector).then(() => {
-            const fragment = new DocumentFragment();
-
-            for (const product of this.products) {
-                const card = document.createElement(ProductCardComponent.selector);
-
-                card.product = product;
-                fragment.appendChild(card);
-            }
-            this.productListElem.appendChild(fragment);
-        });
+        this.elems.productList.setAttribute('is-loading', 'false');
     }
 }
