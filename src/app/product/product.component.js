@@ -10,13 +10,18 @@ template.innerHTML = `
     margin: 0;
 }
 
+.product-page {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
 header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     gap: 20px;
     align-items: center;
-    padding: 20px 0;
 }
 
 @media screen and (width < 700px) {
@@ -101,6 +106,26 @@ header {
 .js-loading-message {
     display: block;
     padding: 15px 0;
+}
+
+.js-result-products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 30%));
+    gap: 14px;
+    padding: 0;
+    list-style-type: none;
+}
+
+@media screen and (width < 500px) {
+    .js-result-products {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+}
+
+@media screen and (width < 600px) {
+    .js-result-products {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
 }
 </style>
 
