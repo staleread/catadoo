@@ -107,8 +107,15 @@ export class ProductComponent extends HTMLElement {
 
         this.elems.productList = this.shadowRoot.querySelector(ProductListComponent.selector);
 
+        this.elems.productList
+            .addEventListener('product-action', (e) => this.handleProductAction(e.detail));
+
         this.shadowRoot
-            .querySelector('input[type="text"]')
+            .querySelector('.js-add-product-btn')
+            .addEventListener('click', () => this.handleProductAction({action: 'create'}));
+
+        this.shadowRoot
+            .querySelector('.js-product-filter')
             .addEventListener('input', (e) => this.refreshProductList(e.target.value));
     }
 
@@ -131,7 +138,8 @@ export class ProductComponent extends HTMLElement {
         clearTimeout(this.refreshTimeout);
 
         this.refreshTimeout = setTimeout(async () => {
-            await this.fetchData();
+            const [products, totalPrice] = await this.fetchData();
+            this.elems.productList.renderProductList(products, totalPrice);
         }, delay);
     }
 
@@ -139,8 +147,22 @@ export class ProductComponent extends HTMLElement {
         this.elems.productList.setAttribute('is-loading', 'true');
 
         const productsInfo = await ProductComponent.productService.getProductsInfo(this.productsFilter);
-        this.elems.productList.setAttribute('is-loading', 'false');
 
-        this.elems.productList.renderProductList(productsInfo.products, productsInfo.totalPrice);
+        this.elems.productList.setAttribute('is-loading', 'false');
+        return [productsInfo.products, productsInfo.totalPrice];
+    }
+
+    handleProductAction(actionInfo) {
+        switch (actionInfo.action) {
+            case 'create':
+                console.log('Creating')
+                break;
+            case 'edit':
+                console.log(`Editing ${actionInfo.productId}...`)
+                break;
+            case 'delete':
+                console.log(`Deleting ${actionInfo.productId}...`)
+                break;
+        }
     }
 }

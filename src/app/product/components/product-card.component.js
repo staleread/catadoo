@@ -100,6 +100,17 @@ export class ProductCardComponent extends HTMLElement {
         this.attachShadow({mode: 'open'});
 
         this.shadowRoot.appendChild(template.content.cloneNode(true));
+
+        this.shadowRoot
+            .querySelector('.wrapper')
+            .addEventListener('click', (e) => this.emitAction(e));
+    }
+
+    connectedCallback() {
+        if (this.rendered) return;
+        this.rendered = true;
+
+        this.render();
     }
 
     render() {
@@ -109,13 +120,21 @@ export class ProductCardComponent extends HTMLElement {
 
         this.shadowRoot.querySelector('.price').innerText = '$' + this.product.price;
 
-        this.shadowRoot.querySelector('.name').innerText = this.product.name
+        this.shadowRoot.querySelector('.name').innerText = this.product.name;
     }
 
-    connectedCallback() {
-        if (this.rendered) return;
-        this.rendered = true;
+    emitAction(event) {
+        const action = event.target.getAttribute('data-product-action');
 
-        this.render()
+        if (!action) {
+            return;
+        }
+
+        this.dispatchEvent(new CustomEvent('product-action', {
+            bubbles: true,
+            composed: true,
+            cancelable: true,
+            detail: {productId: this.product.id, action: action}
+        }));
     }
 }
