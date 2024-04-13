@@ -21,12 +21,11 @@ export class TodoComponent extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
+        this.shadowRoot.appendChild(template.content.cloneNode(true));
     }
 
     connectedCallback() {
         if (this.rendered) return;
         this.rendered = true;
-
-        this.shadowRoot.appendChild(template.content.cloneNode(true));
     }
 }

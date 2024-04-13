@@ -1,3 +1,6 @@
+import {ProductCardComponent} from "./components/product-card.component.js";
+import {ProductService} from "./services/product.service.js";
+
 const template = document.createElement('template');
 
 template.innerHTML = `
@@ -42,7 +45,7 @@ header {
     font-weight: 400;
 }
 
-input[type="text"] {
+.js-product-filter {
     display:block;
     outline: none;
     border: solid 2px var(--gray-light);
@@ -75,7 +78,7 @@ input[type="text"] {
     }
 }
 
-.total-price-wrapper {
+.js-total-price-wrapper {
     border: solid var(--gray-light);
     border-width: 1px 0 0;
 }
@@ -93,40 +96,57 @@ input[type="text"] {
         text-align: center;
     }
 }
-
-.js-result-products {
-    position: relative;
-}
 </style>
 
 <section class="product-page">
     <header>
         <h2 class="title">Products</h2>
         <section class="features">
-            <input type="text" name="product-search" placeholder="Search">
+            <input class="js-product-filter" type="text" name="product-filter" placeholder="Search">
             <button class="js-add-product-btn">Add product</button>
         </section>
     </header>
     
-    <section class="js-result-products"></section>
+    <section class="js-result-products">
+    </section>
     
-    <footer class="total-price-wrapper">
+    <footer class="js-total-price-wrapper">
         <p class="js-total-price">Total: $342</p>
     </footer>
 </section>`;
 
 export class ProductComponent extends HTMLElement {
     static selector = 'app-product-page';
+    static productService = new ProductService()
+
+    products = []
+    filteredProducts = []
+    loadingStatus
 
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
+        this.shadowRoot.appendChild(template.content.cloneNode(true));
     }
 
     connectedCallback() {
         if (this.rendered) return;
         this.rendered = true;
 
-        this.shadowRoot.appendChild(template.content.cloneNode(true));
+        customElements.whenDefined(ProductCardComponent.selector).then(() => {
+            const productsInfo = ProductComponent.productService.getProductsInfo();
+            const fragment = new DocumentFragment();
+
+            for (const product of productsInfo.products) {
+                const card = document.createElement(ProductCardComponent.selector);
+
+                card.product = product;
+                fragment.appendChild(card);
+            }
+
+            const productList = this.shadowRoot.querySelector('.js-result-products')
+            productList.innerHTML = '';
+            productList.appendChild(fragment);
+        })
     }
 }

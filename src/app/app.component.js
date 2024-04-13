@@ -50,18 +50,15 @@ export class AppComponent extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
-    }
-
-    connectedCallback() {
-        if (this.rendered) return;
-        this.rendered = true;
-
         this.shadowRoot.appendChild(template.content.cloneNode(true));
-        this.updatePageContent(this.defaults.route)
 
         this.shadowRoot
             .querySelector(HeaderComponent.selector)
             .addEventListener('route-changed', (e) => this.updatePageContent(e.detail.route))
+    }
+
+    connectedCallback() {
+        this.updatePageContent(this.defaults.route)
     }
 
     updatePageContent(route) {
