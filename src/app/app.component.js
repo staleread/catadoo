@@ -10,12 +10,26 @@ template.innerHTML = `
     box-sizing: border-box;
     color: var(--white);
 }
+
+footer {
+    height: 300px;
+    padding: 30px 0;
+}
+
+.copyright {
+    letter-spacing: 1px;
+    color: var(--gray-light)
+}
 </style>
 
 <main>
     <${HeaderComponent.selector}></${HeaderComponent.selector}>
+    
     <slot name="content"></slot>
-    <footer>&copy; Mykola Ratushniak | Footer works</footer>
+    
+    <footer>
+        <p class="copyright">&copy; Mykola Ratushniak</p>
+    </footer>
 </main>`;
 
 export class AppComponent extends HTMLElement {
