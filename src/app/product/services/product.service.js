@@ -20,17 +20,21 @@ export class ProductService {
     }
 
     getProductsInfo(productNameFilter) {
-        this.#fetchProducts()
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                this.#fetchProducts();
 
-        let products = this.#products
+                let products = this.#products;
 
-        if (productNameFilter) {
-            products = products
-                .filter(p => p.name.toLowerCase().includes(productNameFilter.toLowerCase()))
-        }
+                if (productNameFilter) {
+                    products = products
+                        .filter(p => p.name.toLowerCase().includes(productNameFilter.toLowerCase()));
+                }
 
-        const totalPrice = ProductService.getTotalPrice(products)
-        return new ProductsInfo(products, totalPrice)
+                const totalPrice = ProductService.getTotalPrice(products);
+                resolve(new ProductsInfo(products, totalPrice));
+            }, 1000);
+        });
     }
 
     add(dto) {

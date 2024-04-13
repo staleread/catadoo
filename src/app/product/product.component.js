@@ -96,6 +96,12 @@ header {
         text-align: center;
     }
 }
+
+.js-empty-message,
+.js-loading-message {
+    display: block;
+    padding: 15px 0;
+}
 </style>
 
 <section class="product-page">
@@ -107,11 +113,10 @@ header {
         </section>
     </header>
     
-    <section class="js-result-products">
-    </section>
+    <section class="js-result-products"></section>
     
-    <footer class="js-total-price-wrapper">
-        <p class="js-total-price">Total: $342</p>
+    <footer class="js-total-price-wrapper" hidden>
+        <p class="js-total-price"></p>
     </footer>
 </section>`;
 
@@ -119,34 +124,93 @@ export class ProductComponent extends HTMLElement {
     static selector = 'app-product-page';
     static productService = new ProductService()
 
-    products = []
-    filteredProducts = []
-    loadingStatus
+    productsFilter = '';
+    products = [];
+    totalPrice = 0;
+    refreshTimeout;
+
+    productListElem;
+    totalPriceWrapperElem;
+    totalPriceElem;
 
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(template.content.cloneNode(true));
+
+        this.productListElem = this.shadowRoot.querySelector('.js-result-products');
+        this.totalPriceWrapperElem = this.shadowRoot.querySelector('.js-total-price-wrapper');
+        this.totalPriceElem = this.shadowRoot.querySelector('.js-total-price');
+
+        this.shadowRoot
+            .querySelector('input[type="text"]')
+            .addEventListener('input', (e) => this.refreshProductList(e.target.value));
     }
 
     connectedCallback() {
         if (this.rendered) return;
         this.rendered = true;
 
+        this.refreshProductList();
+    }
+
+    refreshProductList(filter = '') {
+        let delay = 300;
+
+        if (!this.refreshTimeout) {
+            delay = 0;
+        }
+
+        this.productsFilter = filter;
+
+        clearTimeout(this.refreshTimeout);
+        this.refreshTimeout = setTimeout(async () => {
+            await this.fetchData();
+            this.renderProductList();
+        }, delay);
+    }
+
+    onLoading() {
+        this.productListElem.innerHTML = '<div class="js-loading-message">Loading...</div>';
+        this.totalPriceWrapperElem.setAttribute('hidden', '');
+    }
+
+    onLoadingComplete() {
+        this.productListElem.innerHTML = '';
+    }
+
+    async fetchData() {
+        this.onLoading();
+
+        const productsInfo = await ProductComponent.productService.getProductsInfo(this.productsFilter);
+        this.products = productsInfo.products;
+        this.totalPrice = productsInfo.totalPrice;
+
+        this.onLoadingComplete();
+    }
+
+    renderProductList() {
+        this.productListElem.innerHTML = '';
+
+        if (this.products.length === 0) {
+            this.productListElem.innerHTML = `<div class="js-empty-message">Nothing found</div>`;
+            this.totalPriceWrapperElem.setAttribute('hidden', '');
+            return;
+        }
+
+        this.totalPriceWrapperElem.removeAttribute('hidden');
+        this.totalPriceElem.innerText = `Total: $${this.totalPrice}`;
+
         customElements.whenDefined(ProductCardComponent.selector).then(() => {
-            const productsInfo = ProductComponent.productService.getProductsInfo();
             const fragment = new DocumentFragment();
 
-            for (const product of productsInfo.products) {
+            for (const product of this.products) {
                 const card = document.createElement(ProductCardComponent.selector);
 
                 card.product = product;
                 fragment.appendChild(card);
             }
-
-            const productList = this.shadowRoot.querySelector('.js-result-products')
-            productList.innerHTML = '';
-            productList.appendChild(fragment);
-        })
+            this.productListElem.appendChild(fragment);
+        });
     }
 }
