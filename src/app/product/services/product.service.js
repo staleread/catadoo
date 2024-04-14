@@ -2,24 +2,24 @@ import {Product} from "../models/product.model.js";
 import {ProductsInfo} from "../models/products-info.model.js";
 
 export class ProductService {
-    #productListId = 'shop_products';
+    #PRODUCT_LIST_ID = 'shop_products';
     #products = [];
 
-    static getTotalPrice = (products) => products.map(p => p.price).reduce((a, b) => a + b, 0)
+    static getTotalPrice = (products) => products.map(p => p.price).reduce((a, b) => a + b, 0);
 
     async get(id) {
-        await this.#fetchProducts()
+        await this.#fetchItems()
 
-        const product = this.#products.find(p => p.id === id)
+        const product = this.#products.find(p => p.id === id);
 
         if (!product) {
-            throw new Error('Not found')
+            throw new Error('Not found');
         }
-        return product
+        return product;
     }
 
     async getProductsInfo(productNameFilter) {
-        await this.#fetchProducts();
+        await this.#fetchItems();
 
         let products = this.#products;
 
@@ -47,7 +47,7 @@ export class ProductService {
             throw new Error('Please add the image URL');
         }
 
-        await this.#fetchProducts();
+        await this.#fetchItems();
 
         if (this.#products.find(p => p.name === dto.name)) {
             throw new Error('The name is already in use');
@@ -78,26 +78,25 @@ export class ProductService {
         product.price = dto.price;
         product.imageUrl = dto.imageUrl;
 
-        await this.#saveChanges()
+        await this.#saveChanges();
     }
 
     async delete(id) {
-        await this.#fetchProducts();
+        await this.#fetchItems();
 
         const index = this.#products.findIndex(p => p.id === id);
-        this.#products.splice(index, 1)
+        this.#products.splice(index, 1);
 
-        await this.#saveChanges()
+        await this.#saveChanges();
     }
 
-    async #fetchProducts() {
+    async #fetchItems() {
         await new Promise((resolve) => {
             setTimeout(() => {
-                let productsStr = localStorage.getItem(this.#productListId);
+                let productsStr = localStorage.getItem(this.#PRODUCT_LIST_ID);
 
                 this.#products = productsStr
                     ? JSON.parse(productsStr)
-                        .map(p => new Product(p.id, p.name, p.price, p.imageUrl))
                     : [];
 
                 resolve();
@@ -108,7 +107,7 @@ export class ProductService {
     async #saveChanges() {
         await new Promise((resolve) => {
             setTimeout(() => {
-                localStorage.setItem(this.#productListId, JSON.stringify(this.#products))
+                localStorage.setItem(this.#PRODUCT_LIST_ID, JSON.stringify(this.#products))
                 resolve();
             }, 1000);
         });
