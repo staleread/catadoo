@@ -7,6 +7,7 @@ import {ProductListComponent} from "./app/product/components/product-list.compon
 import {ModalComponent} from "./app/shared/modal.component.js";
 import ProductCreateForm from "./app/product/components/product-create-form.component.js";
 import ProductEditForm from "./app/product/components/product-edit-form.component.js";
+import TodoSelectSortComponent from "./app/todo/components/todo-select-sort.component.js";
 
 customElements.define(AppComponent.selector, AppComponent);
 customElements.define(HeaderComponent.selector, HeaderComponent);
@@ -17,3 +18,4 @@ customElements.define(ProductListComponent.selector, ProductListComponent);
 customElements.define(ModalComponent.selector, ModalComponent);
 customElements.define(ProductCreateForm.selector, ProductCreateForm);
 customElements.define(ProductEditForm.selector, ProductEditForm);
+customElements.define(TodoSelectSortComponent.selector, TodoSelectSortComponent);

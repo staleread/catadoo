@@ -69,11 +69,9 @@ export class ModalComponent extends HTMLElement {
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        if (name !== 'is-hidden') {
-            return;
+        if (name === 'is-hidden') {
+            this.elems.wrapper.style.display = newValue === 'true' ? 'none' : 'block';
         }
-
-        this.elems.wrapper.style.display = newValue === 'true' ? 'none' : 'block';
     }
 
     hide() {

@@ -1,6 +1,6 @@
 export default class TodoSortInfo {
-    constructor(isAsc, sortOption) {
+    constructor(isAsc, sortBy) {
         this.isAsc = isAsc;
-        this.sortOption = sortOption;
+        this.sortBy = sortBy;
     }
 }
