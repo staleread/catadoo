@@ -168,11 +168,10 @@ export class ProductComponent extends HTMLElement {
                 this.handleProductCreate();
                 break;
             case 'edit':
-                console.log(`Editing ${actionInfo.productId}...`);
                 await this.handleProductEdit(actionInfo.productId);
                 break;
             case 'delete':
-                console.log(`Deleting ${actionInfo.productId}...`)
+                await this.handleProductDelete(actionInfo.productId);
                 break;
         }
     }
@@ -216,5 +215,11 @@ export class ProductComponent extends HTMLElement {
             this.elems.modal.appendChild(editForm);
             this.elems.modal.show();
         });
+    }
+
+    async handleProductDelete(id) {
+         await ProductComponent.productService.delete(id);
+         this.refreshProductList();
+         alert('Product was deleted successfully');
     }
 }

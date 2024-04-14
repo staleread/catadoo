@@ -80,6 +80,8 @@ export class ProductService {
     }
 
     async delete(id) {
+        await this.#fetchProducts();
+
         const index = this.#products.findIndex(p => p.id === id);
         this.#products.splice(index, 1)
 
