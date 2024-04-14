@@ -6,6 +6,7 @@ import {ProductCardComponent} from "./app/product/components/product-card.compon
 import {ProductListComponent} from "./app/product/components/product-list.component.js";
 import {ModalComponent} from "./app/shared/modal.component.js";
 import ProductCreateForm from "./app/product/components/product-create-form.component.js";
+import ProductEditForm from "./app/product/components/product-edit-form.component.js";
 
 customElements.define(AppComponent.selector, AppComponent);
 customElements.define(HeaderComponent.selector, HeaderComponent);
@@ -15,3 +16,4 @@ customElements.define(ProductCardComponent.selector, ProductCardComponent);
 customElements.define(ProductListComponent.selector, ProductListComponent);
 customElements.define(ModalComponent.selector, ModalComponent);
 customElements.define(ProductCreateForm.selector, ProductCreateForm);
+customElements.define(ProductEditForm.selector, ProductEditForm);

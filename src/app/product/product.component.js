@@ -2,6 +2,7 @@ import {ProductService} from "./services/product.service.js";
 import {ProductListComponent} from "./components/product-list.component.js";
 import {ModalComponent} from "../shared/modal.component.js";
 import ProductCreateForm from "./components/product-create-form.component.js";
+import ProductEditForm from "./components/product-edit-form.component.js";
 
 const template = document.createElement('template');
 
@@ -161,13 +162,14 @@ export class ProductComponent extends HTMLElement {
         return [productsInfo.products, productsInfo.totalPrice];
     }
 
-    handleProductAction(actionInfo) {
+    async handleProductAction(actionInfo) {
         switch (actionInfo.action) {
             case 'create':
                 this.handleProductCreate();
                 break;
             case 'edit':
-                console.log(`Editing ${actionInfo.productId}...`)
+                console.log(`Editing ${actionInfo.productId}...`);
+                await this.handleProductEdit(actionInfo.productId);
                 break;
             case 'delete':
                 console.log(`Deleting ${actionInfo.productId}...`)
@@ -185,10 +187,33 @@ export class ProductComponent extends HTMLElement {
                 await ProductComponent.productService.add(dto);
 
                 this.elems.modal.hide();
+                this.elems.modal.innerHTML = '';
                 this.refreshProductList();
             };
 
             this.elems.modal.appendChild(createForm);
+            this.elems.modal.show();
+        });
+    }
+
+    async handleProductEdit(id) {
+        this.elems.modal.innerHTML = '';
+
+        const product = await ProductComponent.productService.get(id);
+
+        customElements.whenDefined(ProductEditForm.selector).then(() => {
+            const editForm = document.createElement(ProductEditForm.selector);
+            editForm.setProduct(product);
+
+            editForm.onValidSubmit = async (dto) => {
+                await ProductComponent.productService.update(dto);
+
+                this.elems.modal.hide();
+                this.elems.modal.innerHTML = '';
+                this.refreshProductList();
+            };
+
+            this.elems.modal.appendChild(editForm);
             this.elems.modal.show();
         });
     }

@@ -10,7 +10,7 @@ export class ProductService {
     async get(id) {
         await this.#fetchProducts()
 
-        const product = this.#products.find(p => p.getId() === id)
+        const product = this.#products.find(p => p.id === id)
 
         if (!product) {
             throw new Error('Not found')
@@ -80,7 +80,7 @@ export class ProductService {
     }
 
     async delete(id) {
-        const index = this.#products.findIndex(p => p.getId() === id);
+        const index = this.#products.findIndex(p => p.id === id);
         this.#products.splice(index, 1)
 
         await this.#saveChanges()
