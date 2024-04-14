@@ -28,6 +28,8 @@ export class ProductService {
                 .filter(p => p.name.toLowerCase().includes(productNameFilter.toLowerCase()));
         }
 
+        products.sort((a, b) => a.name.localeCompare(b.name));
+
         const totalPrice = ProductService.getTotalPrice(products);
         return new ProductsInfo(products, totalPrice);
     }
