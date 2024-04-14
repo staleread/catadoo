@@ -80,9 +80,11 @@ export class ProductListComponent extends HTMLElement {
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-        this.elems.productList = this.shadowRoot.querySelector('.js-result-products');
-        this.elems.totalPriceWrapper = this.shadowRoot.querySelector('.js-total-price-wrapper');
-        this.elems.totalPrice = this.shadowRoot.querySelector('.js-total-price');
+        this.elems = {
+            productList: this.shadowRoot.querySelector('.js-result-products'),
+            totalPriceWrapper: this.shadowRoot.querySelector('.js-total-price-wrapper'),
+            totalPrice: this.shadowRoot.querySelector('.js-total-price'),
+        };
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -105,8 +107,7 @@ export class ProductListComponent extends HTMLElement {
         if (products.length === 0) {
             this.elems.productList.innerHTML = `<div class="js-empty-message">Nothing found</div>`;
             this.elems.totalPriceWrapper.setAttribute('hidden', '');
-        }
-        else {
+        } else {
             this.elems.productList.innerHTML = '';
             this.elems.totalPriceWrapper.removeAttribute('hidden');
             this.elems.totalPrice.innerText = `Total: $${totalPrice}`;

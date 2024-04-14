@@ -54,7 +54,7 @@ export class AppComponent extends HTMLElement {
 
         this.shadowRoot
             .querySelector(HeaderComponent.selector)
-            .addEventListener('route-changed', (e) => this.updatePageContent(e.detail.route))
+            .addEventListener('route-changed', e => this.updatePageContent(e.detail.route));
     }
 
     connectedCallback() {

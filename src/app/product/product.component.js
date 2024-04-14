@@ -1,5 +1,7 @@
 import {ProductService} from "./services/product.service.js";
 import {ProductListComponent} from "./components/product-list.component.js";
+import {ModalComponent} from "../shared/modal.component.js";
+import ProductCreateForm from "./components/product-create-form.component.js";
 
 const template = document.createElement('template');
 
@@ -89,6 +91,10 @@ header {
     </header>
     
     <${ProductListComponent.selector}></${ProductListComponent.selector}>
+    
+    <${ModalComponent.selector} is-hidden="true">
+        <slot name="modal-content"></slot>
+    </${ModalComponent.selector}>
 </section>`;
 
 export class ProductComponent extends HTMLElement {
@@ -105,7 +111,10 @@ export class ProductComponent extends HTMLElement {
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-        this.elems.productList = this.shadowRoot.querySelector(ProductListComponent.selector);
+        this.elems = {
+            productList: this.shadowRoot.querySelector(ProductListComponent.selector),
+            modal: this.shadowRoot.querySelector(ModalComponent.selector)
+        };
 
         this.elems.productList
             .addEventListener('product-action', (e) => this.handleProductAction(e.detail));
@@ -155,7 +164,7 @@ export class ProductComponent extends HTMLElement {
     handleProductAction(actionInfo) {
         switch (actionInfo.action) {
             case 'create':
-                console.log('Creating')
+                this.handleProductCreate();
                 break;
             case 'edit':
                 console.log(`Editing ${actionInfo.productId}...`)
@@ -164,5 +173,23 @@ export class ProductComponent extends HTMLElement {
                 console.log(`Deleting ${actionInfo.productId}...`)
                 break;
         }
+    }
+
+    handleProductCreate() {
+        this.elems.modal.innerHTML = '';
+
+        customElements.whenDefined(ProductCreateForm.selector).then(() => {
+            const createForm = document.createElement(ProductCreateForm.selector);
+
+            createForm.formSubmittedHandlerAsync = async (dto) => {
+                await ProductComponent.productService.add(dto);
+
+                this.elems.modal.hide();
+                this.refreshProductList();
+            };
+
+            this.elems.modal.appendChild(createForm);
+            this.elems.modal.show();
+        });
     }
 }
