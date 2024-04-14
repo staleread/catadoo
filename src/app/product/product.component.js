@@ -181,7 +181,7 @@ export class ProductComponent extends HTMLElement {
         customElements.whenDefined(ProductCreateForm.selector).then(() => {
             const createForm = document.createElement(ProductCreateForm.selector);
 
-            createForm.formSubmittedHandlerAsync = async (dto) => {
+            createForm.onValidSubmit = async (dto) => {
                 await ProductComponent.productService.add(dto);
 
                 this.elems.modal.hide();

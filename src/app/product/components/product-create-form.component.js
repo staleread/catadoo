@@ -69,10 +69,10 @@ input[type='number']::-webkit-inner-spin-button {
     <label for="image-url">Image Link</label>
     <input class="js-first-input" type="text" id="image-url" name="image-url" autofocus>
     
-    <label for="name">Product Name</label>
+    <label for="name">Name</label>
     <input type="text" id="name" name="name">
     
-    <label for="price">Product Price</label>
+    <label for="price">Price</label>
     <input type="number" id="price" name="price">
     
     <img class="js-image-preview" src="#" alt="Preview Image">
@@ -82,7 +82,7 @@ input[type='number']::-webkit-inner-spin-button {
 export default class ProductCreateForm extends HTMLElement {
     static selector = 'app-product-create-form';
 
-    formSubmittedHandlerAsync = () => {};
+    onValidSubmit = () => {};
     elems = {};
 
     constructor() {
@@ -101,7 +101,7 @@ export default class ProductCreateForm extends HTMLElement {
             .addEventListener('change', (e) => this.updateImagePreview(e.target.value));
 
         this.elems.form
-            .addEventListener('submit', (e) => this.handleSubmit(e))
+            .addEventListener('submit', (e) => this.handleSubmit(e));
     }
 
     connectedCallback() {
@@ -116,6 +116,10 @@ export default class ProductCreateForm extends HTMLElement {
         const price = parseInt(this.elems.form.price.value);
         const imageUrl = this.elems.form.elements['image-url'].value;
 
+        if (!imageUrl) {
+            alert('Please enter image link');
+            return;
+        }
         if (!name) {
             alert('Enter valid product name');
             return;
@@ -124,19 +128,15 @@ export default class ProductCreateForm extends HTMLElement {
             alert('Enter valid product price');
             return;
         }
-        if (!imageUrl) {
-            alert('Please enter image link');
-            return;
-        }
 
         const dto = {
             name: name,
             price: price,
             imageUrl: imageUrl
-        }
+        };
 
         try {
-            await this.formSubmittedHandlerAsync(dto);
+            await this.onValidSubmit(dto);
             this.elems.form.reset();
         } catch (err) {
             alert(err.message);
