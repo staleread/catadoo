@@ -1,5 +1,5 @@
 export const TodoSortOptions = {
     TIMESTAMP: Symbol('timestamp'),
-    NAME: Symbol('name'),
+    DESCRIPTION: Symbol('name'),
     IS_COMPLETED: Symbol('is-completed')
 }
