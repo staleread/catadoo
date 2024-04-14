@@ -61,7 +61,7 @@ export class ModalComponent extends HTMLElement {
             wrapper: this.shadowRoot.querySelector('.modal-wrapper')
         };
 
-        this.elems.wrapper.addEventListener('click', e => {
+        this.elems.wrapper.addEventListener('mousedown', e => {
             if (e.target.classList.contains('modal-wrapper')) {
                 this.hide();
             }
