@@ -135,10 +135,14 @@ export default class TodoComponent extends HTMLElement {
         }
 
         try {
-            await TodoComponent.todoService.add({description: description});
             this.elems.createForm.reset();
+            this.elems.createForm.description.setAttribute('placeholder', 'Processing...');
+
+            await TodoComponent.todoService.add({description: description});
         } catch (err) {
             alert(err.message);
+            this.elems.createForm.description.setAttribute('value', description);
         }
+        this.elems.createForm.description.setAttribute('placeholder', 'Enter your todo');
     }
 }
