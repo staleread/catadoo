@@ -102,7 +102,6 @@ export default class ProductComponent extends HTMLElement {
     static selector = 'app-product-page';
     static productService = new ProductService()
 
-    productsFilter = '';
     refreshTimeout;
 
     elems = {};
@@ -118,11 +117,11 @@ export default class ProductComponent extends HTMLElement {
         };
 
         this.elems.productList
-            .addEventListener('product-action', (e) => this.handleProductAction(e.detail));
+            .addEventListener('product-action', (e) => this.#handleProductAction(e.detail));
 
         this.shadowRoot
             .querySelector('.js-add-product-btn')
-            .addEventListener('click', () => this.handleProductAction({action: 'create'}));
+            .addEventListener('click', () => this.#handleProductAction({action: 'create'}));
 
         this.shadowRoot
             .querySelector('.js-product-filter')
@@ -143,40 +142,31 @@ export default class ProductComponent extends HTMLElement {
         if (!this.refreshTimeout) {
             delay = 0;
         }
-
-        this.productsFilter = filter;
         clearTimeout(this.refreshTimeout);
 
         this.refreshTimeout = setTimeout(async () => {
-            const [products, totalPrice] = await this.fetchData();
-            this.elems.productList.renderProductList(products, totalPrice);
+            const fetchData = () => ProductComponent.productService.getProductsInfo(filter);
+            const productsInfo = await this.elems.productList.awaitWithLoadingDecorator(fetchData);
+
+            this.elems.productList.render(productsInfo.products, productsInfo.totalPrice);
         }, delay);
     }
 
-    async fetchData() {
-        this.elems.productList.setAttribute('is-loading', 'true');
-
-        const productsInfo = await ProductComponent.productService.getProductsInfo(this.productsFilter);
-
-        this.elems.productList.setAttribute('is-loading', 'false');
-        return [productsInfo.products, productsInfo.totalPrice];
-    }
-
-    async handleProductAction(actionInfo) {
+    async #handleProductAction(actionInfo) {
         switch (actionInfo.action) {
             case 'create':
-                this.handleProductCreate();
+                this.#handleProductCreate();
                 break;
             case 'edit':
-                await this.handleProductEdit(actionInfo.productId);
+                await this.#handleProductEdit(actionInfo.productId);
                 break;
             case 'delete':
-                await this.handleProductDelete(actionInfo.productId);
+                await this.#handleProductDelete(actionInfo.productId);
                 break;
         }
     }
 
-    handleProductCreate() {
+    #handleProductCreate() {
         this.elems.modal.innerHTML = '';
 
         customElements.whenDefined(ProductCreateForm.selector).then(() => {
@@ -195,7 +185,7 @@ export default class ProductComponent extends HTMLElement {
         });
     }
 
-    async handleProductEdit(id) {
+    async #handleProductEdit(id) {
         this.elems.modal.innerHTML = '';
 
         const product = await ProductComponent.productService.get(id);
@@ -217,9 +207,9 @@ export default class ProductComponent extends HTMLElement {
         });
     }
 
-    async handleProductDelete(id) {
-         await ProductComponent.productService.delete(id);
-         this.refreshProductList();
-         alert('Product was deleted successfully');
+    async #handleProductDelete(id) {
+        await ProductComponent.productService.delete(id);
+        this.refreshProductList();
+        alert('Product was deleted successfully');
     }
 }

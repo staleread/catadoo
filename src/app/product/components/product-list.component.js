@@ -103,7 +103,7 @@ export default class ProductListComponent extends HTMLElement {
         }
     }
 
-    renderProductList(products, totalPrice) {
+    render(products, totalPrice) {
         if (products.length === 0) {
             this.elems.productList.innerHTML = `<div class="js-empty-message">Nothing found</div>`;
             this.elems.totalPriceWrapper.setAttribute('hidden', '');
@@ -124,5 +124,13 @@ export default class ProductListComponent extends HTMLElement {
                 this.elems.productList.appendChild(fragment);
             });
         }
+    }
+
+    async awaitWithLoadingDecorator(func) {
+        this.setAttribute('is-loading', 'true');
+        const result = await func();
+
+        this.setAttribute('is-loading', 'false');
+        return result;
     }
 }
