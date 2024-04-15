@@ -1,4 +1,4 @@
-import {ProductCardComponent} from "./product-card.component.js";
+import ProductCardComponent from "./product-card.component.js";
 
 const template = document.createElement('template');
 
@@ -66,7 +66,7 @@ template.innerHTML = `
     </footer>
 </div>`;
 
-export class ProductListComponent extends HTMLElement {
+export default class ProductListComponent extends HTMLElement {
     static selector = 'app-product-list';
 
     elems = {}

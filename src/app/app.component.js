@@ -1,6 +1,6 @@
-import {HeaderComponent} from "./layout/header.component.js";
-import {ProductComponent} from "./product/product.component.js";
-import {TodoComponent} from "./todo/todo.component.js";
+import HeaderComponent from "./layout/header.component.js";
+import ProductComponent from "./product/product.component.js";
+import TodoComponent from "./todo/todo.component.js";
 
 const template = document.createElement('template');
 
@@ -40,7 +40,7 @@ footer {
     </footer>
 </main>`;
 
-export class AppComponent extends HTMLElement {
+export default class AppComponent extends HTMLElement {
     static selector = 'app-root';
 
     defaults = {

@@ -1,6 +1,6 @@
-import {ProductService} from "./services/product.service.js";
-import {ProductListComponent} from "./components/product-list.component.js";
-import {ModalComponent} from "../shared/modal.component.js";
+import ProductService from "./services/product.service.js";
+import ProductListComponent from "./components/product-list.component.js";
+import ModalComponent from "../shared/modal.component.js";
 import ProductCreateForm from "./components/product-create-form.component.js";
 import ProductEditForm from "./components/product-edit-form.component.js";
 
@@ -98,7 +98,7 @@ header {
     </${ModalComponent.selector}>
 </section>`;
 
-export class ProductComponent extends HTMLElement {
+export default class ProductComponent extends HTMLElement {
     static selector = 'app-product-page';
     static productService = new ProductService()
 

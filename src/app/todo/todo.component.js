@@ -1,5 +1,5 @@
 import TodoSelectSortComponent from "./components/todo-select-sort.component.js";
-import {TodoService} from "./services/todo.service.js";
+import TodoService from "./services/todo.service.js";
 
 const template = document.createElement('template');
 
@@ -52,14 +52,12 @@ header {
     
     &::after {
          content: "";
-         width: 100%;
-         height: 2px;
-         
-         background-color: var(--gray-light);
-         
          position: absolute;
          bottom: -2px;
          left: 0;
+         width: 100%;
+         height: 2px;
+         background-color: var(--gray-light);
     }
     
     &:focus-within::after {
@@ -103,7 +101,7 @@ header {
     <section class="todos-list"></section>
 </section>`;
 
-export class TodoComponent extends HTMLElement {
+export default class TodoComponent extends HTMLElement {
     static selector = 'app-todo-page';
     static todoService = new TodoService();
 

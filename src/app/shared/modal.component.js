@@ -39,7 +39,7 @@ template.innerHTML = `
     </div>
 </div>`;
 
-export class ModalComponent extends HTMLElement {
+export default class ModalComponent extends HTMLElement {
     static selector = 'app-modal';
 
     elems = {};

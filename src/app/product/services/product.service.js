@@ -1,7 +1,7 @@
-import {Product} from "../models/product.model.js";
-import {ProductsInfo} from "../models/products-info.model.js";
+import Product from "../models/product.model.js";
+import ProductsInfo from "../models/products-info.model.js";
 
-export class ProductService {
+export default class ProductService {
     #PRODUCT_LIST_ID = 'shop_products';
     #products = [];
 

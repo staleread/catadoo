@@ -34,7 +34,7 @@ input[type="radio"] {
     width: var(--size);
     height: var(--size);
     background-position: center;
-    background-size: auto 70%;
+    background-size: auto 60%;
     background-repeat: no-repeat;
     
     background-image: url("/src/assets/arrow-up.png");

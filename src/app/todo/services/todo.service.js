@@ -1,7 +1,7 @@
 import Todo from "../models/todo.model.js";
 import {TodoSortOptions} from "../models/todo-sort-options.model.js";
 
-export class TodoService {
+export default class TodoService {
     #TODO_LIST_ID = 'todo_items';
     #todos = [];
 
@@ -41,7 +41,6 @@ export class TodoService {
 
         return todos;
     }
-
 
     // description
     async add(dto) {

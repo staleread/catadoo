@@ -76,7 +76,7 @@ nav {
     </nav>
 </header>`;
 
-export class HeaderComponent extends HTMLElement {
+export default class HeaderComponent extends HTMLElement {
     static selector = 'app-layout-header';
 
     currentRoute = '/';
