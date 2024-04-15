@@ -21,7 +21,7 @@ export class TodoService {
 
         let todos = this.#todos;
 
-        switch (sortInfo.sortOption) {
+        switch (sortInfo.sortBy) {
             case TodoSortOptions.TIMESTAMP:
                 sortInfo.isAsc
                     ? todos.sort((a, b) => a.timestamp - b.timestamp)
@@ -63,7 +63,7 @@ export class TodoService {
             throw new Error('Please enter valid task description');
         }
 
-        if (!dto.isComplete) {
+        if (dto.isComplete === undefined) {
             throw new Error('Invalid completion state');
         }
 
