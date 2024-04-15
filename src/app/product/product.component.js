@@ -117,15 +117,15 @@ export default class ProductComponent extends HTMLElement {
         };
 
         this.elems.productList
-            .addEventListener('product-action', (e) => this.#handleProductAction(e.detail));
+            .addEventListener('product-action', e => this.#handleProductListAction(e.detail));
 
         this.shadowRoot
             .querySelector('.js-add-product-btn')
-            .addEventListener('click', () => this.#handleProductAction({action: 'create'}));
+            .addEventListener('click', () => this.#handleProductCreate());
 
         this.shadowRoot
             .querySelector('.js-product-filter')
-            .addEventListener('input', (e) => this.refreshProductList(e.target.value));
+            .addEventListener('input', e => this.refreshProductList(e.target.value));
     }
 
     connectedCallback() {
@@ -145,23 +145,21 @@ export default class ProductComponent extends HTMLElement {
         clearTimeout(this.refreshTimeout);
 
         this.refreshTimeout = setTimeout(async () => {
-            const fetchData = () => ProductComponent.productService.getProductsInfo(filter);
-            const productsInfo = await this.elems.productList.awaitWithLoadingDecorator(fetchData);
-
-            this.elems.productList.render(productsInfo.products, productsInfo.totalPrice);
+            const fetchData =  async () => {
+                const productsInfo = await ProductComponent.productService.getProductsInfo(filter);
+                return [productsInfo.products, productsInfo.totalPrice];
+            };
+            await this.elems.productList.renderOnLoad(fetchData);
         }, delay);
     }
 
-    async #handleProductAction(actionInfo) {
-        switch (actionInfo.action) {
-            case 'create':
-                this.#handleProductCreate();
-                break;
+    async #handleProductListAction(actionDetails) {
+        switch (actionDetails.action) {
             case 'edit':
-                await this.#handleProductEdit(actionInfo.productId);
+                await this.#handleProductEdit(actionDetails.productId);
                 break;
             case 'delete':
-                await this.#handleProductDelete(actionInfo.productId);
+                await this.#handleProductDelete(actionDetails.productId);
                 break;
         }
     }

@@ -71,10 +71,6 @@ export default class ProductListComponent extends HTMLElement {
 
     elems = {}
 
-    static get observedAttributes() {
-        return ['is-loading'];
-    }
-
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
@@ -87,23 +83,12 @@ export default class ProductListComponent extends HTMLElement {
         };
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (name !== 'is-loading') {
-            return;
-        }
+    async renderOnLoad(getProductsInfoCallback) {
+        this.elems.productList.innerHTML = '<div class="js-loading-message">Loading...</div>';
+        this.elems.totalPriceWrapper.setAttribute('hidden', '');
 
-        switch (newValue) {
-            case 'true':
-                this.elems.productList.innerHTML = '<div class="js-loading-message">Loading...</div>';
-                this.elems.totalPriceWrapper.setAttribute('hidden', '');
-                break;
-            case 'false':
-                this.elems.productList.innerHTML = '';
-                break;
-        }
-    }
+        const [products, totalPrice] = await getProductsInfoCallback();
 
-    render(products, totalPrice) {
         if (products.length === 0) {
             this.elems.productList.innerHTML = `<div class="js-empty-message">Nothing found</div>`;
             this.elems.totalPriceWrapper.setAttribute('hidden', '');
@@ -124,13 +109,5 @@ export default class ProductListComponent extends HTMLElement {
                 this.elems.productList.appendChild(fragment);
             });
         }
-    }
-
-    async awaitWithLoadingDecorator(func) {
-        this.setAttribute('is-loading', 'true');
-        const result = await func();
-
-        this.setAttribute('is-loading', 'false');
-        return result;
     }
 }
