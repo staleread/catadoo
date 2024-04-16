@@ -5,6 +5,7 @@
     --gray-dark: hsl(0, 0%, 23%);
     --gray-super-dark: hsl(0, 0%, 13%);
     --white: hsl(0, 0%, 80%);
+    --danger: hsl(0, 88%, 64%);
     --text-color: var(--white);
 
     /* fonts */

@@ -79,7 +79,7 @@ nav {
 export default class HeaderComponent extends HTMLElement {
     static selector = 'app-layout-header';
 
-    currentRoute = '/';
+    currentRoute;
 
     constructor() {
         super();
@@ -88,10 +88,24 @@ export default class HeaderComponent extends HTMLElement {
 
         this.shadowRoot
             .querySelector('nav')
-            .addEventListener('click', (e) => this.updateActiveNavOption(e));
+            .addEventListener('click', e => this.#handleActiveNavOptionChanged(e));
     }
 
-    updateActiveNavOption(event) {
+    setActiveNavOption(route) {
+        this.currentRoute = route;
+
+        this.shadowRoot
+            .querySelectorAll('[data-route]')
+            .forEach(link => {
+                if (link.dataset.route === route) {
+                    link.setAttribute('data-active', '');
+                } else {
+                    link.removeAttribute('data-active');
+                }
+            });
+    }
+
+    #handleActiveNavOptionChanged(event) {
         const target = event.target;
 
         if (!target.classList.contains('nav-link')) {

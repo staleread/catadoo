@@ -107,12 +107,8 @@ input[type="radio"] {
 export default class DropdownComponent extends HTMLElement {
     static selector = 'app-dropdown';
 
-    current = 'timespan';
-    optionsMap = new Map([
-        ['description', 'Description'],
-        ['timespan', 'Time Created'],
-        ['is-completed', 'Completion'],
-    ]);
+    current;
+    optionsMap = new Map();
 
     elems = {};
 
@@ -143,14 +139,24 @@ export default class DropdownComponent extends HTMLElement {
             }
         })
 
-        this.elems.current.innerText = this.optionsMap.get(this.current);
+        this.render(this.optionsMap, this.current);
+    }
 
-        for (let [id, displayName] of this.optionsMap) {
+    render(optionsMap, selectedOption) {
+        this.optionsMap = optionsMap;
+        this.current = selectedOption;
+
+        this.elems.current.innerText = optionsMap.get(selectedOption);
+
+        let id = 1;
+        for (let [value, displayName] of optionsMap) {
             this.elems.options.innerHTML += `
             <div class="option-wrapper">
-                <label class="option" for="${id}">${displayName}</label>
-                <input type="radio" id="${id}" value="${id}"/>
+                <label class="option" for="${"option" + id}">${displayName}</label>
+                <input type="radio" id="${"option" + id}" value="${value}"/>
             </div>`;
+
+            id++;
         }
     }
 
@@ -159,22 +165,22 @@ export default class DropdownComponent extends HTMLElement {
             return;
         }
 
-        const optionId = event.target.getAttribute('for');
+        const selectedOption = event.target.nextElementSibling.value;
         this.elems.options.classList.toggle('is-hidden');
 
-        if (optionId === this.current) {
+        if (selectedOption === this.current) {
             return;
         }
 
-        this.elems.current.innerText = this.optionsMap.get(optionId);
+        this.elems.current.innerText = this.optionsMap.get(selectedOption);
 
         this.dispatchEvent(new CustomEvent('selection-changed', {
             bubbles: true,
             composed: true,
             cancelable: true,
-            detail: {oldValue: this.current, newValue: optionId}
+            detail: {oldValue: this.current, newValue: selectedOption}
         }));
 
-        this.current = optionId;
+        this.current = selectedOption;
     }
 }

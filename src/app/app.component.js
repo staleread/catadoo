@@ -43,22 +43,27 @@ footer {
 export default class AppComponent extends HTMLElement {
     static selector = 'app-root';
 
-    defaults = {
-        route: '/products'
-    }
+    route = '/todos'
+    elems = {}
 
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-        this.shadowRoot
-            .querySelector(HeaderComponent.selector)
+        this.elems = {
+            headerNav: this.shadowRoot.querySelector(HeaderComponent.selector)
+        };
+
+        this.elems.headerNav
             .addEventListener('route-changed', e => this.updatePageContent(e.detail.route));
     }
 
     connectedCallback() {
-        this.updatePageContent(this.defaults.route)
+        customElements.whenDefined(HeaderComponent.selector).then(() => {
+            this.elems.headerNav.setActiveNavOption(this.route);
+            this.updatePageContent(this.route)
+        });
     }
 
     updatePageContent(route) {

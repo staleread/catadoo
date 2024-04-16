@@ -7,10 +7,6 @@ template.innerHTML = `
     margin: 0;
 }
 
-:host {
-    display: block;
-}
-
 .wrapper {
     display: flex;
     flex-direction: column;
@@ -19,10 +15,15 @@ template.innerHTML = `
     gap: 10px;
     background-color: var(--gray);
     border-radius: 10px;
-    opacity: .7;
+    opacity: 0;
+    transition: opacity .5s;
     
-    &:hover {
-        opacity: 1;;
+    &.visible {
+        opacity: .8;
+    }
+    
+    &.visible:hover {
+        opacity: 1;
     }
 }
 
@@ -94,15 +95,18 @@ export default class ProductCardComponent extends HTMLElement {
     static selector = 'app-product-card';
 
     product;
+    elems = {};
 
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-        this.shadowRoot
-            .querySelector('.wrapper')
-            .addEventListener('click', (e) => this.emitAction(e));
+        this.elems = {
+            wrapper: this.shadowRoot.querySelector('.wrapper')
+        };
+
+        this.elems.wrapper.addEventListener('click', (e) => this.#emitAction(e));
     }
 
     connectedCallback() {
@@ -112,17 +116,22 @@ export default class ProductCardComponent extends HTMLElement {
         this.render();
     }
 
+    fadeOut() {
+        setTimeout(() => this.elems.wrapper.classList.remove('visible'));
+    }
+
     render() {
         this.shadowRoot
             .querySelector('.image')
             .setAttribute('src', this.product.imageUrl);
 
         this.shadowRoot.querySelector('.price').innerText = '$' + this.product.price;
-
         this.shadowRoot.querySelector('.name').innerText = this.product.name;
+
+        setTimeout(() => this.elems.wrapper.classList.add('visible'), 100);
     }
 
-    emitAction(event) {
+    #emitAction(event) {
         const action = event.target.getAttribute('data-product-action');
 
         if (!action) {

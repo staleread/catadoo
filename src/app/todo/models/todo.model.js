@@ -1,8 +1,8 @@
 export default class Todo {
-    constructor(id, timestamp, isComplete, description) {
+    constructor(id, timestamp, isCompleted, description) {
         this.id = id;
         this.timestamp = timestamp;
-        this.isComplete = isComplete;
+        this.isCompleted = isCompleted;
         this.description = description;
     }
 }

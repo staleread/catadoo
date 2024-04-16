@@ -7,7 +7,8 @@ import ProductListComponent from "./app/product/components/product-list.componen
 import ModalComponent from "./app/shared/modal.component.js";
 import ProductCreateForm from "./app/product/components/product-create-form.component.js";
 import ProductEditForm from "./app/product/components/product-edit-form.component.js";
-import TodoSelectSortComponent from "./app/todo/components/todo-select-sort.component.js";
+import TodoItemComponent from "./app/todo/components/todo-item.component.js";
+import DropdownComponent from "./app/shared/dropdown.component.js";
 
 customElements.define(AppComponent.selector, AppComponent);
 customElements.define(HeaderComponent.selector, HeaderComponent);
@@ -18,4 +19,5 @@ customElements.define(ProductListComponent.selector, ProductListComponent);
 customElements.define(ModalComponent.selector, ModalComponent);
 customElements.define(ProductCreateForm.selector, ProductCreateForm);
 customElements.define(ProductEditForm.selector, ProductEditForm);
-customElements.define(TodoSelectSortComponent.selector, TodoSelectSortComponent);
+customElements.define(TodoItemComponent.selector, TodoItemComponent);
+customElements.define(DropdownComponent.selector, DropdownComponent);

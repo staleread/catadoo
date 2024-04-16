@@ -30,46 +30,50 @@ export default class TodoService {
             case TodoSortOptions.DESCRIPTION:
                 sortInfo.isAsc
                     ? todos.sort((a, b) => a.description.localeCompare(b.description))
-                    : todos.sort((a, b) => b.description.localeCompare(a.description));
+                    : todos = todos.sort((a, b) => b.description.localeCompare(a.description));
                 break;
             case TodoSortOptions.IS_COMPLETED:
                 sortInfo.isAsc
-                    ? todos.sort((a, b) => +a.isComplete - +b.isComplete)
-                    : todos.sort((a, b) => +b.isComplete - +a.isComplete);
+                    ? todos.sort((a, b) => +a.isCompleted - +b.isCompleted)
+                    : todos.sort((a, b) => +b.isCompleted - +a.isCompleted);
                 break;
         }
 
         return todos;
     }
 
-    // description
-    async add(dto) {
-        if (!dto.description || dto.description.match(/^ *$/)) {
+    async add(description) {
+        if (!description || description.match(/^ *$/)) {
             throw new Error('Please enter valid task description');
         }
 
         await this.#fetchItems();
 
-        let todo = new Todo(crypto.randomUUID(), Date.now(), false, dto.description);
+        let todo = new Todo(crypto.randomUUID(), Date.now(), false, description);
         this.#todos.push(todo);
 
         await this.#saveChanges();
     }
 
-    // id, isComplete, Description
-    async update(dto) {
-        if (!dto.description || dto.description(/^ *$/)) {
-            throw new Error('Please enter valid task description');
-        }
-
-        if (dto.isComplete === undefined) {
+    async updateCompleted(id, isCompleted) {
+        if (isCompleted === undefined) {
             throw new Error('Invalid completion state');
         }
 
-        let todo = await this.get(dto.id);
+        let todo = await this.get(id);
+        todo.isCompleted = isCompleted;
 
-        todo.description = dto.description;
-        todo.isComplete = dto.isComplete;
+        await this.#saveChanges()
+    }
+
+
+    async updateDescription(id, description) {
+        if (!description || description.match(/^ *$/)) {
+            throw new Error('Please enter valid task description');
+        }
+
+        let todo = await this.get(id);
+        todo.description = description;
 
         await this.#saveChanges()
     }

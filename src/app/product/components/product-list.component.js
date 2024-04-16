@@ -69,6 +69,7 @@ template.innerHTML = `
 export default class ProductListComponent extends HTMLElement {
     static selector = 'app-product-list';
 
+    FADE_DURATION = 500;
     elems = {}
 
     constructor() {
@@ -84,6 +85,8 @@ export default class ProductListComponent extends HTMLElement {
     }
 
     async renderOnLoad(getProductsInfoCallback) {
+        await this.#fadeOutProducts();
+
         this.elems.productList.innerHTML = '<div class="js-loading-message">Loading...</div>';
         this.elems.totalPriceWrapper.setAttribute('hidden', '');
 
@@ -98,16 +101,39 @@ export default class ProductListComponent extends HTMLElement {
             this.elems.totalPrice.innerText = `Total: $${totalPrice}`;
 
             customElements.whenDefined(ProductCardComponent.selector).then(() => {
-                const fragment = new DocumentFragment();
+                const interval = 100;
+                let delay = 0;
 
                 for (const product of products) {
-                    const card = document.createElement(ProductCardComponent.selector);
+                    setTimeout (() => {
+                        const card = document.createElement(ProductCardComponent.selector);
 
-                    card.product = product;
-                    fragment.appendChild(card);
+                        card.product = product;
+                        this.elems.productList.appendChild(card);
+                    }, delay);
+
+                    delay += interval;
                 }
-                this.elems.productList.appendChild(fragment);
             });
         }
+    }
+
+    async #fadeOutProducts() {
+        const children = [...this.elems.productList.children]
+            .filter(e => e.localName === ProductCardComponent.selector);
+
+        if (children.length === 0) {
+            return;
+        }
+
+        const interval = 100;
+        let delay = 0;
+
+        for (const child of children.reverse()) {
+            setTimeout(() => child.fadeOut(), delay)
+            delay += interval;
+        }
+        await new Promise(resolve =>
+            setTimeout(resolve, interval * children.length + this.FADE_DURATION));
     }
 }
