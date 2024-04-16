@@ -75,10 +75,6 @@ input[type="radio"] {
     }
 }
 
-.option-wrapper {
-    
-}
-
 .option {
     display: block;
     padding: 7px 15px;
@@ -115,19 +111,19 @@ export default class DropdownComponent extends HTMLElement {
     optionsMap = new Map([
         ['description', 'Description'],
         ['timespan', 'Time Created'],
-        ['is-created', 'Completion'],
+        ['is-completed', 'Completion'],
     ]);
 
     elems = {};
 
     constructor() {
         super();
-        this.attachShadow({mode: 'open'});
-        this.shadowRoot.appendChild(template.content.cloneNode(true));
+        const shadow = this.attachShadow({mode: 'closed'});
+        shadow.appendChild(template.content.cloneNode(true));
 
         this.elems = {
-            current: this.shadowRoot.querySelector('.current'),
-            options: this.shadowRoot.querySelector('.options'),
+            current: shadow.querySelector('.current'),
+            options: shadow.querySelector('.options'),
         };
 
         this.elems.current
@@ -138,11 +134,14 @@ export default class DropdownComponent extends HTMLElement {
     }
 
     connectedCallback() {
+        // close dropdown when clicking outside
         document.addEventListener('click', e => {
-            if (e.target.localName !== this.localName) {
-                this.elems.options.classList.add('is-hidden')
+            const composedTarget = e.composedPath()[0];
+
+            if (composedTarget.localName !== this.localName) {
+                this.elems.options.classList.add('is-hidden');
             }
-        });
+        })
 
         this.elems.current.innerText = this.optionsMap.get(this.current);
 
