@@ -43,7 +43,7 @@ footer {
 export default class AppComponent extends HTMLElement {
     static selector = 'app-root';
 
-    route = '/todos'
+    route = '/products'
     elems = {}
 
     constructor() {

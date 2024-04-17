@@ -51,7 +51,7 @@ header {
 .todo-create__wrapper {
     display: block;
     position: relative;
-    width: 100%;
+    flex-grow: 1;
     
     &::after {
          content: "";
@@ -124,13 +124,14 @@ header {
     }
 }
 
-.sort-options-dropdown {
-    width: 200px;
-}
-
 .js-todo-list {
     display: flex;
+    position: relative;
     flex-direction: column;
+}
+
+.sort-options-dropdown {
+    width: 200px;
 }
 
 </style>

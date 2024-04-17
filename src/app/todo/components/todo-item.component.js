@@ -36,7 +36,7 @@ template.innerHTML = `
         left: 9px;
         top: 4px;
         width: 6px;
-        height: 11px;
+        height: 12px;
         border: solid var(--white);
         border-width: 0 3px 3px 0;
         transform: rotate(45deg);
@@ -46,7 +46,7 @@ template.innerHTML = `
 .todo-description__wrapper {
     display: block;
     position: relative;
-    width: 100%;
+    flex-grow: 1;
     
     &:focus-within:has(:not([readonly]))::after {
         content: "";
