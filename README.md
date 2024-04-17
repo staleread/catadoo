@@ -10,6 +10,11 @@
   * Code structure
   * Components Overview
 * Custom Events
+  * `composedPath()`
+  * sending data via `event.detail` 
 * Event Behaviours
   * Delegation
   * Debounce
+* Async JS
+  * Promise, error handling
+  * async/await
