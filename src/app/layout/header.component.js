@@ -69,7 +69,7 @@ nav {
 </style>
 
 <header>
-    <h1 class="title">Chapter 6</h1>
+    <h1 class="title">Catadoo</h1>
     <nav>
         <a class="nav-link" href="/products" data-route="/products" data-active>Shop</a>
         <a class="nav-link" href="/todos" data-route="/todos">Todo List</a>
