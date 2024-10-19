@@ -1,5 +1,9 @@
-# JS06-web-components
+# Catadoo
+
+Simple SPA using Web Components. Inspired by [Angular](https://github.com/angular/angular)
+
 ## New Concepts
+
 * Single Page Application
 * Web Components
   * Custom elements
@@ -13,8 +17,8 @@
   * `composedPath()`
   * sending data via `event.detail` 
 * Event Behaviours
-  * Delegation
-  * Debounce
+  * Event Delegation
+* Debounce
 * Async JS
   * Promise, error handling
   * async/await
