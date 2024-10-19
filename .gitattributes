@@ -1,0 +1,9 @@
+*      text=auto
+
+*.html eol=lf
+*.js   eol=lf
+*.css  eol=lf
+*scss  eol=lf
+*.md   eol=lf
+
+*.png  -text

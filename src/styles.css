@@ -1,0 +1,33 @@
+:root {
+    /* colors */
+    --gray-light: hsl(0, 0%, 39%);
+    --gray: hsl(0, 0%, 27%);
+    --gray-dark: hsl(0, 0%, 23%);
+    --gray-super-dark: hsl(0, 0%, 13%);
+    --white: hsl(0, 0%, 80%);
+    --danger: hsl(0, 88%, 64%);
+    --text-color: var(--white);
+
+    /* fonts */
+    --main-font: "Inter", sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: var(--main-font);
+    margin: 0;
+}
+
+body {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 20px;
+    background-color: var(--gray-super-dark);
+}
+
+@media screen and (width < 500px) {
+    body {
+        width: 100%;
+        padding: 0 10px;
+    }
+}
