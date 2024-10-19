@@ -67,8 +67,6 @@ template.innerHTML = `
 </div>`;
 
 export default class ProductListComponent extends HTMLElement {
-    static selector = 'app-product-list';
-
     FADE_DURATION = 500;
     elems = {}
 
@@ -100,13 +98,13 @@ export default class ProductListComponent extends HTMLElement {
             this.elems.totalPriceWrapper.removeAttribute('hidden');
             this.elems.totalPrice.innerText = `Total: $${totalPrice}`;
 
-            customElements.whenDefined(ProductCardComponent.selector).then(() => {
+            customElements.whenDefined('app-product-card').then(() => {
                 const interval = 100;
                 let delay = 0;
 
                 for (const product of products) {
                     setTimeout (() => {
-                        const card = document.createElement(ProductCardComponent.selector);
+                        const card = document.createElement('app-product-card');
 
                         card.product = product;
                         this.elems.productList.appendChild(card);
@@ -120,7 +118,7 @@ export default class ProductListComponent extends HTMLElement {
 
     async #fadeOutProducts() {
         const children = [...this.elems.productList.children]
-            .filter(e => e.localName === ProductCardComponent.selector);
+            .filter(e => e.localName === 'app-product-card');
 
         if (children.length === 0) {
             return;
@@ -137,3 +135,5 @@ export default class ProductListComponent extends HTMLElement {
             setTimeout(resolve, interval * children.length + this.FADE_DURATION));
     }
 }
+
+customElements.define('app-product-list', ProductListComponent);

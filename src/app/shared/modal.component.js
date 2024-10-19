@@ -40,8 +40,6 @@ template.innerHTML = `
 </div>`;
 
 export default class ModalComponent extends HTMLElement {
-    static selector = 'app-modal';
-
     elems = {};
 
     static get observedAttributes() {
@@ -84,3 +82,5 @@ export default class ModalComponent extends HTMLElement {
         this.setAttribute('is-hidden', 'false');
     }
 }
+
+customElements.define('app-modal', ModalComponent);

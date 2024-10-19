@@ -92,8 +92,6 @@ img {
 </article>`;
 
 export default class ProductCardComponent extends HTMLElement {
-    static selector = 'app-product-card';
-
     product;
     elems = {};
 
@@ -146,3 +144,5 @@ export default class ProductCardComponent extends HTMLElement {
         }));
     }
 }
+
+customElements.define('app-product-card', ProductCardComponent);

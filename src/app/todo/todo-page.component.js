@@ -1,5 +1,5 @@
 import TodoService from "./services/todo.service.js";
-import {TodoSortOptions} from "./models/todo-sort-options.model.js";
+import { TodoSortOptions } from "./models/todo-sort-options.model.js";
 import TodoItemComponent from "./components/todo-item.component.js";
 import DropdownComponent from "../shared/dropdown.component.js";
 
@@ -145,7 +145,7 @@ header {
             </form>
             <section class="sort-actions">
                 <button class="toggle-direction-btn"></button>
-                <${DropdownComponent.selector} class="sort-options-dropdown"></${DropdownComponent.selector}>
+                <app-dropdown class="sort-options-dropdown"></app-dropdown>
             </section>
         </div>
     </header>
@@ -153,8 +153,7 @@ header {
     <section class="js-todo-list"></section>
 </section>`;
 
-export default class TodoComponent extends HTMLElement {
-    static selector = 'app-todo-page';
+export default class TodoPageComponent extends HTMLElement {
     static todoService = new TodoService();
     static sortOptions = new Map ([
         ['DESCRIPTION', 'Description'],
@@ -168,7 +167,7 @@ export default class TodoComponent extends HTMLElement {
     #sortBy = 'IS_COMPLETED';
 
     #isCompletedChangedHandler = async (id, isCompleted) => {
-        await TodoComponent.todoService.updateCompleted(id, isCompleted);
+        await TodoPageComponent.todoService.updateCompleted(id, isCompleted);
 
         if (this.#sortBy === 'IS_COMPLETED') {
             this.refreshTodoList();
@@ -176,14 +175,14 @@ export default class TodoComponent extends HTMLElement {
     }
 
     #descriptionChangedHandler = async (id, description) => {
-        await TodoComponent.todoService.updateDescription(id, description);
+        await TodoPageComponent.todoService.updateDescription(id, description);
 
         if (this.#sortBy === 'DESCRIPTION') {
             this.refreshTodoList();
         }
     }
 
-    #todoDeleteHandler = async(id) => await TodoComponent.todoService.delete(id);
+    #todoDeleteHandler = async(id) => await TodoPageComponent.todoService.delete(id);
 
     constructor() {
         super();
@@ -221,8 +220,8 @@ export default class TodoComponent extends HTMLElement {
             ? this.elems.toggleSortDirectionBtn.classList.remove('desc')
             : this.elems.toggleSortDirectionBtn.classList.add('desc');
 
-        customElements.whenDefined(DropdownComponent.selector).then(() => {
-            this.elems.sortOptionsDropdown.render(TodoComponent.sortOptions, this.#sortBy);
+        customElements.whenDefined('app-dropdown').then(() => {
+            this.elems.sortOptionsDropdown.render(TodoPageComponent.sortOptions, this.#sortBy);
         });
 
         this.refreshTodoList();
@@ -238,7 +237,7 @@ export default class TodoComponent extends HTMLElement {
         clearTimeout(this.refreshTimeout);
 
         this.refreshTimeout = setTimeout(async () => {
-            const fetchData = () => TodoComponent.todoService.getAll({
+            const fetchData = () => TodoPageComponent.todoService.getAll({
                 isAsc: this.#isAsc,
                 sortBy: TodoSortOptions[this.#sortBy]
             });
@@ -260,7 +259,7 @@ export default class TodoComponent extends HTMLElement {
             this.elems.createForm.reset();
             this.elems.createForm.description.setAttribute('placeholder', 'Processing...');
 
-            await TodoComponent.todoService.add(description);
+            await TodoPageComponent.todoService.add(description);
             this.refreshTodoList();
         } catch (err) {
             alert(err.message);
@@ -281,9 +280,9 @@ export default class TodoComponent extends HTMLElement {
         } else {
             this.elems.todoList.innerHTML = '';
 
-            customElements.whenDefined(TodoItemComponent.selector).then(async () => {
+            customElements.whenDefined('app-todo-item').then(async () => {
                 for (const todo of todos) {
-                    const elem = document.createElement(TodoItemComponent.selector);
+                    const elem = document.createElement('app-todo-item');
 
                     elem.todo = todo;
                     elem.deleteCallback = this.#todoDeleteHandler;
@@ -298,7 +297,7 @@ export default class TodoComponent extends HTMLElement {
 
     async #fadeOutTodos() {
         const children = [...this.elems.todoList.children]
-            .filter(e => e.localName === TodoItemComponent.selector);
+            .filter(e => e.localName === 'app-todo-item');
 
         if (children.length === 0) {
             return;
@@ -315,3 +314,5 @@ export default class TodoComponent extends HTMLElement {
             setTimeout(resolve, interval * children.length + this.FADE_DURATION));
     }
 }
+
+customElements.define('app-todo-page', TodoPageComponent);

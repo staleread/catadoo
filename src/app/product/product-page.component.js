@@ -1,8 +1,8 @@
 import ProductService from "./services/product.service.js";
 import ProductListComponent from "./components/product-list.component.js";
 import ModalComponent from "../shared/modal.component.js";
-import ProductCreateForm from "./components/product-create-form.component.js";
-import ProductEditForm from "./components/product-edit-form.component.js";
+import ProductCreateFormComponent from "./components/product-create-form.component.js";
+import ProductEditFormComponent from "./components/product-edit-form.component.js";
 
 const template = document.createElement('template');
 
@@ -91,15 +91,14 @@ header {
         </section>
     </header>
     
-    <${ProductListComponent.selector}></${ProductListComponent.selector}>
+    <app-product-list></app-product-list>
     
-    <${ModalComponent.selector} is-hidden="true">
+    <app-modal is-hidden="true">
         <slot name="modal-content"></slot>
-    </${ModalComponent.selector}>
+    </app-modal>
 </section>`;
 
-export default class ProductComponent extends HTMLElement {
-    static selector = 'app-product-page';
+export default class ProductPageComponent extends HTMLElement {
     static productService = new ProductService()
 
     refreshTimeout;
@@ -112,8 +111,8 @@ export default class ProductComponent extends HTMLElement {
         this.shadowRoot.appendChild(template.content.cloneNode(true));
 
         this.elems = {
-            productList: this.shadowRoot.querySelector(ProductListComponent.selector),
-            modal: this.shadowRoot.querySelector(ModalComponent.selector)
+            productList: this.shadowRoot.querySelector('app-product-list'),
+            modal: this.shadowRoot.querySelector('app-modal')
         };
 
         this.elems.productList
@@ -146,7 +145,7 @@ export default class ProductComponent extends HTMLElement {
 
         this.refreshTimeout = setTimeout(async () => {
             const fetchData =  async () => {
-                const productsInfo = await ProductComponent.productService.getProductsInfo(filter);
+                const productsInfo = await ProductPageComponent.productService.getProductsInfo(filter);
                 return [productsInfo.products, productsInfo.totalPrice];
             };
             await this.elems.productList.renderOnLoad(fetchData);
@@ -167,11 +166,11 @@ export default class ProductComponent extends HTMLElement {
     #handleProductCreate() {
         this.elems.modal.innerHTML = '';
 
-        customElements.whenDefined(ProductCreateForm.selector).then(() => {
-            const createForm = document.createElement(ProductCreateForm.selector);
+        customElements.whenDefined('app-product-create-form').then(() => {
+            const createForm = document.createElement('app-product-create-form');
 
             createForm.onValidSubmit = async (dto) => {
-                await ProductComponent.productService.add(dto);
+                await ProductPageComponent.productService.add(dto);
 
                 this.elems.modal.hide();
                 this.elems.modal.innerHTML = '';
@@ -186,14 +185,14 @@ export default class ProductComponent extends HTMLElement {
     async #handleProductEdit(id) {
         this.elems.modal.innerHTML = '';
 
-        const product = await ProductComponent.productService.get(id);
+        const product = await ProductPageComponent.productService.get(id);
 
-        customElements.whenDefined(ProductEditForm.selector).then(() => {
-            const editForm = document.createElement(ProductEditForm.selector);
+        customElements.whenDefined('app-product-edit-form').then(() => {
+            const editForm = document.createElement('app-product-edit-form');
             editForm.setProduct(product);
 
             editForm.onValidSubmit = async (dto) => {
-                await ProductComponent.productService.update(dto);
+                await ProductPageComponent.productService.update(dto);
 
                 this.elems.modal.hide();
                 this.elems.modal.innerHTML = '';
@@ -206,8 +205,10 @@ export default class ProductComponent extends HTMLElement {
     }
 
     async #handleProductDelete(id) {
-        await ProductComponent.productService.delete(id);
+        await ProductPageComponent.productService.delete(id);
         this.refreshProductList();
         alert('Product was deleted successfully');
     }
 }
+
+customElements.define('app-product-page', ProductPageComponent);

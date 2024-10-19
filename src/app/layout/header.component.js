@@ -77,8 +77,6 @@ nav {
 </header>`;
 
 export default class HeaderComponent extends HTMLElement {
-    static selector = 'app-layout-header';
-
     currentRoute;
 
     constructor() {
@@ -132,3 +130,5 @@ export default class HeaderComponent extends HTMLElement {
         }));
     }
 }
+
+customElements.define('app-header', HeaderComponent);

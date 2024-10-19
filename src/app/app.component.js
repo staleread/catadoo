@@ -1,6 +1,6 @@
 import HeaderComponent from "./layout/header.component.js";
-import ProductComponent from "./product/product.component.js";
-import TodoComponent from "./todo/todo.component.js";
+import ProductPageComponent from "./product/product-page.component.js";
+import TodoPageComponent from "./todo/todo-page.component.js";
 
 const template = document.createElement('template');
 
@@ -31,7 +31,7 @@ footer {
 </style>
 
 <main>
-    <${HeaderComponent.selector}></${HeaderComponent.selector}>
+    <app-header></app-header>
     
     <slot name="content"></slot>
     
@@ -41,8 +41,6 @@ footer {
 </main>`;
 
 export default class AppComponent extends HTMLElement {
-    static selector = 'app-root';
-
     route = '/products'
     elems = {}
 
@@ -52,7 +50,7 @@ export default class AppComponent extends HTMLElement {
         this.shadowRoot.appendChild(template.content.cloneNode(true));
 
         this.elems = {
-            headerNav: this.shadowRoot.querySelector(HeaderComponent.selector)
+            headerNav: this.shadowRoot.querySelector('app-header')
         };
 
         this.elems.headerNav
@@ -60,7 +58,7 @@ export default class AppComponent extends HTMLElement {
     }
 
     connectedCallback() {
-        customElements.whenDefined(HeaderComponent.selector).then(() => {
+        customElements.whenDefined('app-header').then(() => {
             this.elems.headerNav.setActiveNavOption(this.route);
             this.updatePageContent(this.route)
         });
@@ -72,10 +70,10 @@ export default class AppComponent extends HTMLElement {
         switch (route) {
             case '/':
             case '/products':
-                contentComponentSelector = ProductComponent.selector;
+                contentComponentSelector = 'app-product-page';
                 break;
             case '/todos':
-                contentComponentSelector = TodoComponent.selector;
+                contentComponentSelector = 'app-todo-page';
                 break;
         }
 
@@ -87,3 +85,5 @@ export default class AppComponent extends HTMLElement {
         this.shadowRoot.host.appendChild(contentElem)
     }
 }
+
+customElements.define('app-root', AppComponent);

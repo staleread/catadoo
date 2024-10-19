@@ -105,8 +105,6 @@ input[type="radio"] {
 </div>`;
 
 export default class DropdownComponent extends HTMLElement {
-    static selector = 'app-dropdown';
-
     current;
     optionsMap = new Map();
 
@@ -184,3 +182,5 @@ export default class DropdownComponent extends HTMLElement {
         this.current = selectedOption;
     }
 }
+
+customElements.define('app-dropdown', DropdownComponent);

@@ -106,8 +106,6 @@ template.innerHTML = `
 </article>`;
 
 export default class TodoItemComponent extends HTMLElement {
-    static selector = 'app-todo-item';
-
     todo;
     deleteCallback;
     editDescriptionCallback;
@@ -219,3 +217,5 @@ export default class TodoItemComponent extends HTMLElement {
         }
     }
 }
+
+customElements.define('app-todo-item', TodoItemComponent);

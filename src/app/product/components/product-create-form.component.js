@@ -79,9 +79,7 @@ input[type='number']::-webkit-inner-spin-button {
     <button type="submit">Submit</button>
 </form>`;
 
-export default class ProductCreateForm extends HTMLElement {
-    static selector = 'app-product-create-form';
-
+export default class ProductCreateFormComponent extends HTMLElement {
     onValidSubmit = () => {};
     elems = {};
 
@@ -153,3 +151,5 @@ export default class ProductCreateForm extends HTMLElement {
         this.elems.imagePreview.src = imageSrc;
     }
 }
+
+customElements.define('app-product-create-form', ProductCreateFormComponent);
